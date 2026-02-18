@@ -1,1 +1,1 @@
-{"version":"10.2.10","info":{"plain":"- Core: Require token for websocket connections - [#33820](https://github.com/storybookjs/storybook/pull/33820), thanks @ghengeveld!"}}
+{"version":"10.2.11","info":{"plain":"- Next.js: Handle legacyBehavior prop in Link mock component  - [#33862](https://github.com/storybookjs/storybook/pull/33862), thanks @yatishgoel!"}}
