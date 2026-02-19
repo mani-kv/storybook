@@ -13,6 +13,7 @@ import { Provider as ManagerProvider, types } from 'storybook/manager-api';
 import type { Combo } from 'storybook/manager-api';
 import { ThemeProvider, ensure as ensureTheme } from 'storybook/theming';
 
+import { CompositionProvider } from './components/preview/composition/CompositionContext';
 import { App } from './App';
 import type { Layout } from './components/layout/Layout';
 import { LayoutProvider } from './components/layout/LayoutProvider';
@@ -68,8 +69,9 @@ export const Main: FC<{ provider: Provider }> = ({ provider }) => {
 
             return (
               <ThemeProvider key="theme.provider" theme={ensureTheme(state.theme)}>
-                <LayoutProvider>
-                  <App
+                <CompositionProvider>
+                  <LayoutProvider>
+                    <App
                     key="app"
                     pages={pages}
                     managerLayoutState={{
@@ -79,7 +81,8 @@ export const Main: FC<{ provider: Provider }> = ({ provider }) => {
                     hasTab={!!api.getQueryParam('tab')}
                     setManagerLayoutState={setManagerLayoutState}
                   />
-                </LayoutProvider>
+                  </LayoutProvider>
+                </CompositionProvider>
               </ThemeProvider>
             );
           }}

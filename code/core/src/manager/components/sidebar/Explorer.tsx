@@ -15,6 +15,7 @@ export interface ExplorerProps {
   hasEntries: boolean;
   dataset: CombinedDataset;
   selected: Selection;
+  viewMode?: string;
 }
 
 export const Explorer: FC<ExplorerProps> = React.memo(function Explorer({
@@ -24,6 +25,7 @@ export const Explorer: FC<ExplorerProps> = React.memo(function Explorer({
   isHidden,
   dataset,
   selected,
+  viewMode,
   ...restProps
 }) {
   const containerRef = useRef<HTMLElement>(null);
@@ -67,6 +69,7 @@ export const Explorer: FC<ExplorerProps> = React.memo(function Explorer({
           selectedStoryId={selected?.refId === ref.id ? selected.storyId : null}
           highlightedRef={highlightedRef}
           setHighlighted={setHighlighted}
+          viewMode={viewMode}
         />
       ))}
     </nav>

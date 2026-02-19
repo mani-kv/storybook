@@ -95,6 +95,7 @@ export interface SidebarProps extends API_LoadedRefData {
   menu: any[];
   storyId?: string;
   refId?: string;
+  viewMode?: string;
   menuHighlighted?: boolean;
   enableShortcuts?: boolean;
   onMenuClick?: HeadingProps['onMenuClick'];
@@ -106,6 +107,7 @@ export const Sidebar = React.memo(function Sidebar({
   // @ts-expect-error (non strict)
   storyId = null,
   refId = DEFAULT_REF_ID,
+  viewMode,
   index,
   indexJson,
   indexError,
@@ -215,6 +217,7 @@ export const Sidebar = React.memo(function Sidebar({
                     isBrowsing={isNavVisible}
                     isHidden={!isNavReachable}
                     hasEntries={hasEntries}
+                    viewMode={viewMode}
                   />
                 }
                 {isSearchResultRendered && (

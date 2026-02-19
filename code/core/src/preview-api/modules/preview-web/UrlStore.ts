@@ -76,7 +76,7 @@ export const getSelectionSpecifierFromPath: () => SelectionSpecifier | null = ()
     let viewMode = getFirstString(query.viewMode) as ViewMode;
     if (typeof viewMode !== 'string' || !viewMode) {
       viewMode = 'story';
-    } else if (!viewMode.match(/docs|story/)) {
+    } else if (!viewMode.match(/docs|story|composition/)) {
       return null;
     }
 

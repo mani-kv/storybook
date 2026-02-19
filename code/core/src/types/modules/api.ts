@@ -12,7 +12,7 @@ import type { StoryIndex } from './indexer';
 
 type OrString<T extends string> = T | (string & {});
 
-export type API_ViewMode = OrString<'story' | 'docs' | 'settings'> | undefined;
+export type API_ViewMode = OrString<'story' | 'docs' | 'settings' | 'composition'> | undefined;
 
 export type API_RenderOptions = Addon_RenderOptions;
 

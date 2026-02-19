@@ -13,6 +13,7 @@ export interface StoryData {
 }
 
 const splitPathRegex = /\/([^/]+)\/(?:(.*)_)?([^/]+)?/;
+const viewModeOnlyRegex = /^\/?([^/]+)\/?$/;
 
 export const parsePath: (path: string | undefined) => StoryData = memoize(1000)((
   path: string | undefined | null
@@ -24,13 +25,15 @@ export const parsePath: (path: string | undefined) => StoryData = memoize(1000)(
   };
 
   if (path) {
-    const [, viewMode, refId, storyId] = path.toLowerCase().match(splitPathRegex) || [];
-    if (viewMode) {
-      Object.assign(result, {
-        viewMode,
-        storyId,
-        refId,
-      });
+    const pathLower = path.toLowerCase();
+    const fullMatch = pathLower.match(splitPathRegex);
+    const viewModeOnlyMatch = pathLower.match(viewModeOnlyRegex);
+
+    if (fullMatch) {
+      const [, viewMode, refId, storyId] = fullMatch;
+      Object.assign(result, { viewMode, storyId, refId });
+    } else if (viewModeOnlyMatch) {
+      result.viewMode = viewModeOnlyMatch[1];
     }
   }
   return result;

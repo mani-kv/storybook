@@ -23,6 +23,7 @@ const Panel: FC<any> = (props) => {
   );
 
   const { parameters, type } = story ?? {};
+  const viewMode = state.viewMode;
 
   const panelActions = useMemo(
     () => ({
@@ -36,24 +37,29 @@ const Panel: FC<any> = (props) => {
   const panels = useMemo(() => {
     const allPanels = api.getElements(Addon_TypesEnum.PANEL);
 
-    if (!allPanels || type !== 'story') {
+    if (!allPanels) {
       return allPanels;
     }
 
     const filteredPanels: typeof allPanels = {};
     Object.entries(allPanels).forEach(([id, p]) => {
-      const { paramKey }: any = p;
-      if (paramKey && parameters && parameters[paramKey] && parameters[paramKey].disable) {
+      const { paramKey, match }: any = p;
+      if (typeof match === 'function' && !match({ viewMode })) {
         return;
       }
-      if (p.disabled === true || (typeof p.disabled === 'function' && p.disabled(parameters))) {
-        return;
+      if (type === 'story') {
+        if (paramKey && parameters && parameters[paramKey] && parameters[paramKey].disable) {
+          return;
+        }
+        if (p.disabled === true || (typeof p.disabled === 'function' && p.disabled(parameters))) {
+          return;
+        }
       }
       filteredPanels[id] = p;
     });
 
     return filteredPanels;
-  }, [api, type, parameters]);
+  }, [api, type, parameters, viewMode]);
 
   return (
     <AddonPanel

@@ -13,6 +13,7 @@ import { Helmet } from 'react-helmet-async';
 import { type Combo, Consumer, addons, merge, types } from 'storybook/manager-api';
 
 import { useLandmark } from '../../hooks/useLandmark';
+import { CompositionCanvas } from './composition/CompositionCanvas';
 import { FramesRenderer } from './FramesRenderer';
 import { ToolbarComp } from './Toolbar';
 import { ApplyWrappers } from './Wrappers';
@@ -38,7 +39,7 @@ export const createCanvasTab = (): Addon_BaseType => ({
   type: types.TAB,
   title: 'Canvas',
   route: ({ storyId, refId }) => (refId ? `/story/${refId}_${storyId}` : `/story/${storyId}`),
-  match: ({ viewMode }) => !!(viewMode && viewMode.match(/^(story|docs)$/)),
+  match: ({ viewMode }) => !!(viewMode && viewMode.match(/^(story|docs|composition)$/)),
   render: () => null,
 });
 
@@ -207,7 +208,9 @@ const Canvas: FC<{
                     </S.LoaderWrapper>
                   )}
                   <ApplyWrappers id={id} storyId={storyId} viewMode={viewMode} wrappers={wrappers}>
-                    {customCanvas ? (
+                    {viewMode === 'composition' ? (
+                      <CompositionCanvas />
+                    ) : customCanvas ? (
                       customCanvas(storyId, viewMode, id, baseUrl, scale, queryParams)
                     ) : (
                       <FramesRenderer

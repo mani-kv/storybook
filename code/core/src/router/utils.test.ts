@@ -82,6 +82,17 @@ describe('parsePath', () => {
       refId: 'refid',
     });
   });
+
+  it('should parse viewMode-only path like /composition or composition', () => {
+    expect(parsePath('/composition')).toMatchObject({
+      viewMode: 'composition',
+      storyId: undefined,
+      refId: undefined,
+    });
+    expect(parsePath('composition')).toMatchObject({
+      viewMode: 'composition',
+    });
+  });
 });
 
 describe('deepDiff', () => {

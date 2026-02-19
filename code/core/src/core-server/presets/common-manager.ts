@@ -4,6 +4,7 @@ import { global } from '@storybook/global';
 import { addons, Tag } from 'storybook/manager-api';
 
 // THE ORDER OF THESE IMPORTS MATTERS! IT DEFINES THE ORDER OF PANELS AND TOOLS!
+import compositionManager from '../../composition/manager';
 import controlsManager from '../../controls/manager';
 import actionsManager from '../../actions/manager';
 import componentTestingManager from '../../component-testing/manager';
@@ -46,6 +47,7 @@ export default [
   backgroundsManager,
   componentTestingManager,
   controlsManager,
+  compositionManager,
   viewportManager,
   outlineManager,
 ];

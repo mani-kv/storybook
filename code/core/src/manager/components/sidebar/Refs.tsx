@@ -1,9 +1,11 @@
 import type { FC, MutableRefObject } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import type { API_StoryEntry } from 'storybook/internal/types';
 import { useStorybookApi, useStorybookState } from 'storybook/manager-api';
 import { styled } from 'storybook/theming';
 
+import { useCompositionOptional } from '../preview/composition/CompositionContext';
 import { getStateType } from '../../utils/tree';
 import { AuthBlock, EmptyBlock, ErrorBlock, LoaderBlock } from './RefBlocks';
 import { RefIndicator } from './RefIndicator';
@@ -19,6 +21,7 @@ export interface RefProps {
   selectedStoryId: string | null;
   highlightedRef: MutableRefObject<Highlight>;
   setHighlighted: (highlight: Highlight) => void;
+  viewMode?: string;
 }
 
 const Wrapper = styled.div<{ isMain: boolean }>(({ isMain }) => ({
@@ -75,6 +78,7 @@ const CollapseButton = styled.button(({ theme }) => ({
 export const Ref: FC<RefType & RefProps> = React.memo(function Ref(props) {
   const { docsOptions } = useStorybookState();
   const api = useStorybookApi();
+  const composition = useCompositionOptional();
   const {
     filteredIndex: index,
     id: refId,
@@ -91,6 +95,7 @@ export const Ref: FC<RefType & RefProps> = React.memo(function Ref(props) {
     indexError,
     previewInitialized,
     allStatuses,
+    viewMode,
   } = props;
 
   const length = useMemo(() => (index ? Object.keys(index).length : 0), [index]);
@@ -121,8 +126,25 @@ export const Ref: FC<RefType & RefProps> = React.memo(function Ref(props) {
   );
 
   const onSelectStoryId = useCallback(
-    (storyId: string) => api?.selectStory(storyId, undefined, { ref: isMain ? undefined : refId }),
-    [api, isMain, refId]
+    (itemId: string) => {
+      if (viewMode === 'composition' && composition) {
+        const entry = index?.[itemId];
+        if (
+          entry &&
+          entry.type === 'story' &&
+          'subtype' in entry &&
+          entry.subtype === 'story'
+        ) {
+          const storyEntry = entry as API_StoryEntry;
+          const componentId = storyEntry.title ?? storyEntry.parent ?? itemId;
+          const props = (storyEntry.initialArgs ?? storyEntry.args ?? {}) as Record<string, unknown>;
+          composition.addNode(itemId, componentId, storyEntry.name, props);
+          return;
+        }
+      }
+      api?.selectStory(itemId, undefined, { ref: isMain ? undefined : refId });
+    },
+    [viewMode, composition, index, api, isMain, refId]
   );
 
   return (
